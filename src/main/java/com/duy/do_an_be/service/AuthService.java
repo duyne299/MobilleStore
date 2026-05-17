@@ -46,8 +46,12 @@ public class AuthService {
         return AuthResponse.builder()
                 .access_token(jwtToken)
                 .user(AuthResponse.UserResponse.builder()
+                        .userId(user.getUserId())
                         .email(user.getEmail())
                         .fullName(user.getFullName())
+                        .phone(user.getPhone())
+                        .address(user.getAddress())
+                        .avatar(user.getAvatar())
                         .role(user.getRole().name())
                         .status(user.isStatus())
                         .build())
@@ -59,7 +63,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
-                )
+                    )
         );
 
         var user = userRepository.findByEmail(request.getEmail())
@@ -75,8 +79,12 @@ public class AuthService {
         return AuthResponse.builder()
                 .access_token(jwtToken)
                 .user(AuthResponse.UserResponse.builder()
+                        .userId(user.getUserId())
                         .email(user.getEmail())
                         .fullName(user.getFullName())
+                        .phone(user.getPhone())
+                        .address(user.getAddress())
+                        .avatar(user.getAvatar())
                         .role(user.getRole().name())
                         .status(user.isStatus())
                         .build())

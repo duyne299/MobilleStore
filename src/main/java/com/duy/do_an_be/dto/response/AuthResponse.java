@@ -12,8 +12,12 @@ public class AuthResponse {
     @Data
     @Builder
     public static class UserResponse {
+        private Long userId;
         private String email;
         private String fullName;
+        private String phone;
+        private String address;
+        private String avatar;
         private String role;
         private boolean status;
     }
