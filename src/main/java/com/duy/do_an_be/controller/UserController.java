@@ -44,10 +44,10 @@ public class UserController {
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<User> create(
             @ModelAttribute User user,
-            @RequestPart(value = "avatar", required = false) org.springframework.web.multipart.MultipartFile avatar
+            @RequestPart(value = "avatarFile", required = false) org.springframework.web.multipart.MultipartFile avatarFile
     ) {
-        if (avatar != null && !avatar.isEmpty()) {
-            user.setAvatar(fileService.saveFile(avatar));
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            user.setAvatar(fileService.saveFile(avatarFile));
         }
         return ResponseEntity.ok(userService.create(user));
     }
@@ -56,10 +56,10 @@ public class UserController {
     public ResponseEntity<User> update(
             @PathVariable Long id,
             @ModelAttribute User user,
-            @RequestPart(value = "avatar", required = false) org.springframework.web.multipart.MultipartFile avatar
+            @RequestPart(value = "avatarFile", required = false) org.springframework.web.multipart.MultipartFile avatarFile
     ) {
-        if (avatar != null && !avatar.isEmpty()) {
-            user.setAvatar(fileService.saveFile(avatar));
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            user.setAvatar(fileService.saveFile(avatarFile));
         }
         return ResponseEntity.ok(userService.update(id, user));
     }
