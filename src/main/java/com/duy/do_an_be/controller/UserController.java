@@ -41,6 +41,17 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<User> create(
+            @ModelAttribute User user,
+            @RequestPart(value = "avatar", required = false) org.springframework.web.multipart.MultipartFile avatar
+    ) {
+        if (avatar != null && !avatar.isEmpty()) {
+            user.setAvatar(fileService.saveFile(avatar));
+        }
+        return ResponseEntity.ok(userService.create(user));
+    }
+
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity<User> update(
             @PathVariable Long id,

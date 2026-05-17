@@ -53,4 +53,11 @@ public class StoreService {
         store.setActive(isActive);
         return storeRepository.save(store);
     }
+
+    @Transactional
+    public Store toggleStatus(Long id) {
+        Store store = findOne(id);
+        store.setActive(!store.isActive());
+        return storeRepository.save(store);
+    }
 }

@@ -9,13 +9,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public User create(User user) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode("123456"));
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER);
+        }
+        return userRepository.save(user);
+    }
 
     public Page<User> findAll(String search, int page, int limit) {
         if (search != null && !search.isEmpty()) {

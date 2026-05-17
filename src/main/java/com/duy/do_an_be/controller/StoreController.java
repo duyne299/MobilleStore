@@ -40,7 +40,7 @@ public class StoreController {
         return ResponseEntity.ok(storeService.create(store));
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<Store> update(@PathVariable Long id, @RequestBody Store store) {
         return ResponseEntity.ok(storeService.update(id, store));
     }
@@ -54,5 +54,10 @@ public class StoreController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<Store> updateStatus(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
         return ResponseEntity.ok(storeService.updateStatus(id, body.get("isActive")));
+    }
+
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<Store> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(storeService.toggleStatus(id));
     }
 }
