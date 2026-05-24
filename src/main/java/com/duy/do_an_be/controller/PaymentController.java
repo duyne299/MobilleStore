@@ -37,7 +37,8 @@ public class PaymentController {
         String returnUrl = (String) request.get("returnUrl");
 
         // Mock VNPay payment URL that redirects back to returnUrl with standard VNPay success parameters
-        String mockPaymentUrl = returnUrl + "?vnp_ResponseCode=00&vnp_TxnRef=" + orderId + "&vnp_Amount=" + amount;
+        String transactionNo = "VNP" + System.currentTimeMillis();
+        String mockPaymentUrl = returnUrl + "?vnp_ResponseCode=00&vnp_TxnRef=" + orderId + "&vnp_Amount=" + amount + "&vnp_TransactionNo=" + transactionNo;
 
         Map<String, String> response = new HashMap<>();
         response.put("paymentUrl", mockPaymentUrl);

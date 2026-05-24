@@ -32,6 +32,7 @@ public class Order extends BaseEntity {
     private String status;
     private String note;
     private String customerAddress;
+    private String transactionCode;
 
     @Enumerated(EnumType.STRING)
     private OrderType orderType;

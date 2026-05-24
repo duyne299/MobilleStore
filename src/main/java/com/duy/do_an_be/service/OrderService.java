@@ -117,7 +117,12 @@ public class OrderService {
     @Transactional
     public Order updateStatus(Long id, Order orderDto) {
         Order order = findOne(id);
-        order.setStatus(orderDto.getStatus());
+        if (orderDto.getStatus() != null) {
+            order.setStatus(orderDto.getStatus());
+        }
+        if (orderDto.getTransactionCode() != null) {
+            order.setTransactionCode(orderDto.getTransactionCode());
+        }
         return orderRepository.save(order);
     }
 
