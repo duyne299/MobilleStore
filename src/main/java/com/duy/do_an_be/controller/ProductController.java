@@ -56,6 +56,7 @@ public class ProductController {
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<Product> create(
             @ModelAttribute Product product,
+            @RequestParam(value = "coverIndex", required = false) Integer coverIndex,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         if (images != null && !images.isEmpty()) {
@@ -64,9 +65,8 @@ public class ProductController {
                 imageUrls.add(fileService.saveFile(file));
             }
             product.setImages(imageUrls);
-            if (!imageUrls.isEmpty()) {
-                product.setMainImage(imageUrls.get(0));
-            }
+            int idx = (coverIndex != null && coverIndex >= 0 && coverIndex < imageUrls.size()) ? coverIndex : 0;
+            product.setMainImage(imageUrls.get(idx));
         }
         return ResponseEntity.ok(productService.create(product));
     }
@@ -75,6 +75,7 @@ public class ProductController {
     public ResponseEntity<Product> update(
             @PathVariable String slug,
             @ModelAttribute Product product,
+            @RequestParam(value = "coverIndex", required = false) Integer coverIndex,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
         if (images != null && !images.isEmpty()) {
@@ -83,6 +84,8 @@ public class ProductController {
                 imageUrls.add(fileService.saveFile(file));
             }
             product.setImages(imageUrls);
+            int idx = (coverIndex != null && coverIndex >= 0 && coverIndex < imageUrls.size()) ? coverIndex : 0;
+            product.setMainImage(imageUrls.get(idx));
         }
         return ResponseEntity.ok(productService.update(slug, product));
     }

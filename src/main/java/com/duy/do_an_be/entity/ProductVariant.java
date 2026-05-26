@@ -31,6 +31,7 @@ public class ProductVariant extends BaseEntity {
 
     private String rom;
     private String color;
+    private String colorCode;
     private Double extraPrice;
 
     @Builder.Default

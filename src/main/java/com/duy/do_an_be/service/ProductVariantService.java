@@ -37,6 +37,7 @@ public class ProductVariantService {
         ProductVariant variant = findOne(id);
         variant.setRom(variantDto.getRom());
         variant.setColor(variantDto.getColor());
+        variant.setColorCode(variantDto.getColorCode());
         variant.setExtraPrice(variantDto.getExtraPrice());
         variant.setActive(variantDto.isActive());
         

@@ -29,6 +29,7 @@ public class ProductService {
         }
         productPage.getContent().forEach(p -> {
             if (p.getVariants() != null) p.getVariants().size();
+            if (p.getSpecification() != null) p.getSpecification().getSpecId();
         });
         return productPage;
     }
@@ -38,6 +39,7 @@ public class ProductService {
         Product product = productRepository.findBySlug(slug)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         if (product.getVariants() != null) product.getVariants().size();
+        if (product.getSpecification() != null) product.getSpecification().getSpecId();
         return product;
     }
 
@@ -46,6 +48,7 @@ public class ProductService {
         List<Product> products = productRepository.findByCategoryCategoryId(categoryId);
         products.forEach(p -> {
             if (p.getVariants() != null) p.getVariants().size();
+            if (p.getSpecification() != null) p.getSpecification().getSpecId();
         });
         return products;
     }
@@ -64,8 +67,10 @@ public class ProductService {
         product.setProName(productDto.getProName());
         product.setSlug(toSlug(productDto.getProName()));
         product.setDescription(productDto.getDescription());
-        product.setMainImage(productDto.getMainImage());
-        product.setImages(productDto.getImages());
+        if (productDto.getImages() != null && !productDto.getImages().isEmpty()) {
+            product.setImages(productDto.getImages());
+            product.setMainImage(productDto.getMainImage());
+        }
         product.setCategory(productDto.getCategory());
         product.setBrand(productDto.getBrand());
         product.setActive(productDto.isActive());

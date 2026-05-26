@@ -22,6 +22,13 @@ public class ProductSpecification extends BaseEntity {
     @JsonIgnore
     private Product product;
 
+    @com.fasterxml.jackson.annotation.JsonProperty("proId")
+    public void setProId(Long proId) {
+        if (proId != null) {
+            this.product = Product.builder().proId(proId).build();
+        }
+    }
+
     private String os;
     private String display;
     private String cpu;
