@@ -45,6 +45,9 @@ public class ProductVariant extends BaseEntity {
 
     private Double baseSalePrice;
 
+    @Transient
+    private Integer soldQuantity = 0;
+
     public Boolean isActive() {
         return isActive;
     }

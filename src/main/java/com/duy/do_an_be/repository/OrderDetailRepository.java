@@ -12,5 +12,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.product.proId = :proId")
     Long sumQuantityByProductId(@Param("proId") Long proId);
 
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.optionId = :optionId")
+    Long sumQuantityByOptionId(@Param("optionId") Long optionId);
+
     List<OrderDetail> findByOrderOrderId(Long orderId);
 }

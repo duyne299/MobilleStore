@@ -1,6 +1,7 @@
 package com.duy.do_an_be.service;
 
 import com.duy.do_an_be.entity.ProductVariant;
+import com.duy.do_an_be.repository.OrderDetailRepository;
 import com.duy.do_an_be.repository.ProductVariantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,18 +14,32 @@ import java.util.List;
 public class ProductVariantService {
 
     private final ProductVariantRepository productVariantRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public List<ProductVariant> findAll() {
-        return productVariantRepository.findAll();
+        List<ProductVariant> list = productVariantRepository.findAll();
+        list.forEach(v -> {
+            Long sold = orderDetailRepository.sumQuantityByOptionId(v.getOptionId());
+            v.setSoldQuantity(sold != null ? sold.intValue() : 0);
+        });
+        return list;
     }
 
     public ProductVariant findOne(Long id) {
-        return productVariantRepository.findById(id)
+        ProductVariant variant = productVariantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Variant not found"));
+        Long sold = orderDetailRepository.sumQuantityByOptionId(variant.getOptionId());
+        variant.setSoldQuantity(sold != null ? sold.intValue() : 0);
+        return variant;
     }
 
     public List<ProductVariant> findByProductId(Long proId) {
-        return productVariantRepository.findByProductProId(proId);
+        List<ProductVariant> list = productVariantRepository.findByProductProId(proId);
+        list.forEach(v -> {
+            Long sold = orderDetailRepository.sumQuantityByOptionId(v.getOptionId());
+            v.setSoldQuantity(sold != null ? sold.intValue() : 0);
+        });
+        return list;
     }
 
     @Transactional
