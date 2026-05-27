@@ -50,7 +50,15 @@ public class UserService {
         user.setFullName(userDetails.getFullName());
         user.setPhone(userDetails.getPhone());
         user.setAddress(userDetails.getAddress());
-        if (userDetails.getAvatar() != null) user.setAvatar(userDetails.getAvatar());
+        if (userDetails.getRole() != null) {
+            user.setRole(userDetails.getRole());
+        }
+        if (userDetails.isStatus() != null) {
+            user.setStatus(userDetails.isStatus());
+        }
+        if (userDetails.getAvatar() != null) {
+            user.setAvatar(userDetails.getAvatar());
+        }
         return userRepository.save(user);
     }
 
