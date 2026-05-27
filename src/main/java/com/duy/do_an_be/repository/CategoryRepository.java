@@ -10,5 +10,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findBySlug(String slug);
     Page<Category> findByCategoryNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Category> findByIsActive(Boolean isActive, Pageable pageable);
+    Page<Category> findByCategoryNameContainingIgnoreCaseAndIsActive(String name, Boolean isActive, Pageable pageable);
     boolean existsByCategoryName(String name);
 }

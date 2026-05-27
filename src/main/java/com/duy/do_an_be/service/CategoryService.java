@@ -18,11 +18,19 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Page<Category> findAll(String search, int page, int limit) {
-        if (search != null && !search.isEmpty()) {
-            return categoryRepository.findByCategoryNameContainingIgnoreCase(search, PageRequest.of(page - 1, limit));
+    public Page<Category> findAll(String search, Boolean active, int page, int limit) {
+        org.springframework.data.domain.Pageable pageable = PageRequest.of(page - 1, limit);
+        if (active != null) {
+            if (search != null && !search.isEmpty()) {
+                return categoryRepository.findByCategoryNameContainingIgnoreCaseAndIsActive(search, active, pageable);
+            }
+            return categoryRepository.findByIsActive(active, pageable);
+        } else {
+            if (search != null && !search.isEmpty()) {
+                return categoryRepository.findByCategoryNameContainingIgnoreCase(search, pageable);
+            }
+            return categoryRepository.findAll(pageable);
         }
-        return categoryRepository.findAll(PageRequest.of(page - 1, limit));
     }
 
     public Category findOne(String idOrSlug) {

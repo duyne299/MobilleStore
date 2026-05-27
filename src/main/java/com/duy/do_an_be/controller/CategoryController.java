@@ -21,10 +21,11 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> findAll(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) Boolean active,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        Page<Category> categoryPage = categoryService.findAll(search, page, limit);
+        Page<Category> categoryPage = categoryService.findAll(search, active, page, limit);
         Map<String, Object> response = new HashMap<>();
         response.put("data", categoryPage.getContent());
         response.put("total", categoryPage.getTotalElements());
