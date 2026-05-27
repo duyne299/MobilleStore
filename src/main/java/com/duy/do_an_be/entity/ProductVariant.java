@@ -45,6 +45,10 @@ public class ProductVariant extends BaseEntity {
 
     private Double baseSalePrice;
 
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private java.util.List<CartItem> cartItems;
+
     @Transient
     private Integer soldQuantity = 0;
 

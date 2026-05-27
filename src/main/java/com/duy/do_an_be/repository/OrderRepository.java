@@ -15,4 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
         @org.springframework.data.repository.query.Param("userId") Long userId, 
         @org.springframework.data.repository.query.Param("proId") Long proId
     );
+
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT o FROM Order o JOIN o.details d WHERE d.option.product.proId = :proId")
+    java.util.List<Order> findOrdersByProductId(@org.springframework.data.repository.query.Param("proId") Long proId);
 }

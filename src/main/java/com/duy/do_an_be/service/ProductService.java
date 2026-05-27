@@ -1,6 +1,9 @@
 package com.duy.do_an_be.service;
 
 import com.duy.do_an_be.entity.Product;
+import com.duy.do_an_be.entity.Order;
+import com.duy.do_an_be.repository.OrderDetailRepository;
+import com.duy.do_an_be.repository.OrderRepository;
 import com.duy.do_an_be.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,8 @@ import java.util.regex.Pattern;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
 
     @Transactional(readOnly = true)
     public Page<Product> findAll(String search, int page, int limit) {
@@ -79,6 +84,10 @@ public class ProductService {
 
     @Transactional
     public void remove(Long id) {
+        List<Order> orders = orderRepository.findOrdersByProductId(id);
+        if (orders != null && !orders.isEmpty()) {
+            orderRepository.deleteAll(orders);
+        }
         productRepository.deleteById(id);
     }
 

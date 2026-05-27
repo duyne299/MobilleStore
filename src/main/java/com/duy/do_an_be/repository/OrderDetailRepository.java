@@ -16,4 +16,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     Long sumQuantityByOptionId(@Param("optionId") Long optionId);
 
     List<OrderDetail> findByOrderOrderId(Long orderId);
+
+    boolean existsByOptionProductProId(Long proId);
 }
