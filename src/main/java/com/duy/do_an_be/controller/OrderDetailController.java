@@ -45,4 +45,29 @@ public class OrderDetailController {
     public ResponseEntity<List<OrderDetail>> findByOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderDetailRepository.findByOrderOrderId(orderId));
     }
+
+    @DeleteMapping("/{id}")
+    @org.springframework.transaction.annotation.Transactional
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        OrderDetail orderDetail = orderDetailRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("OrderDetail not found"));
+        Order order = orderDetail.getOrder();
+
+        orderDetailRepository.delete(orderDetail);
+
+        // Recalculate order totals based on remaining order details
+        List<OrderDetail> remainingDetails = orderDetailRepository.findByOrderOrderId(order.getOrderId());
+        double subTotal = remainingDetails.stream()
+                .filter(d -> !d.getDetailId().equals(id))
+                .mapToDouble(d -> d.getQuantity() * d.getPrice())
+                .sum();
+
+        double shippingFee = order.getShippingFee() != null ? order.getShippingFee() : 0.0;
+
+        order.setTotalAmount(subTotal);
+        order.setFinalAmount(subTotal + shippingFee);
+        orderRepository.save(order);
+
+        return ResponseEntity.noContent().build();
+    }
 }
