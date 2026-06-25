@@ -9,6 +9,7 @@ import com.duy.do_an_be.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,12 +60,16 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                    )
-        );
+                try {
+                        authenticationManager.authenticate(
+                                        new UsernamePasswordAuthenticationToken(
+                                                        request.getEmail(),
+                                                        request.getPassword()
+                                        )
+                        );
+                } catch (BadCredentialsException ex) {
+                        throw new BadCredentialsException("Sai tên đăng nhập hoặc mật khẩu.Vui lòng thử lại.");
+                }
 
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();

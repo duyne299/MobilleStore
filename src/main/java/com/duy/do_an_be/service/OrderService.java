@@ -2,8 +2,10 @@ package com.duy.do_an_be.service;
 
 import com.duy.do_an_be.entity.Order;
 import com.duy.do_an_be.entity.OrderDetail;
+import com.duy.do_an_be.entity.ProductVariant;
 import com.duy.do_an_be.repository.OrderRepository;
 import com.duy.do_an_be.repository.OrderDetailRepository;
+import com.duy.do_an_be.repository.ProductVariantRepository;
 import com.duy.do_an_be.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final ProductVariantRepository productVariantRepository;
     private final UserRepository userRepository;
 
     public Long getSoldQuantityByProduct(Long productId) {
@@ -117,13 +120,32 @@ public class OrderService {
     @Transactional
     public Order updateStatus(Long id, Order orderDto) {
         Order order = findOne(id);
+        String oldStatus = order.getStatus();
+
         if (orderDto.getStatus() != null) {
-            order.setStatus(orderDto.getStatus());
+            String newStatus = orderDto.getStatus();
+            order.setStatus(newStatus);
+
+            if (!"CANCELLED".equalsIgnoreCase(oldStatus)
+                    && "CANCELLED".equalsIgnoreCase(newStatus)) {
+                refundStockForCancelledOrder(order);
+            }
         }
+
         if (orderDto.getTransactionCode() != null) {
             order.setTransactionCode(orderDto.getTransactionCode());
         }
         return orderRepository.save(order);
+    }
+
+    private void refundStockForCancelledOrder(Order order) {
+        for (OrderDetail detail : order.getDetails()) {
+            ProductVariant variant = productVariantRepository.findById(detail.getOption().getOptionId())
+                    .orElseThrow(() -> new RuntimeException("Product variant not found: " + detail.getOption().getOptionId()));
+            int currentQuantity = variant.getQuantity() != null ? variant.getQuantity() : 0;
+            variant.setQuantity(currentQuantity + (detail.getQuantity() != null ? detail.getQuantity() : 0));
+            productVariantRepository.save(variant);
+        }
     }
 
     @Transactional

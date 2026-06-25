@@ -9,10 +9,10 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
-    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.product.proId = :proId")
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.product.proId = :proId AND upper(od.order.status) IN ('COMPLETED','HOÀN THÀNH','ĐÃ HOÀN THÀNH','DA HOAN THANH','HOAN THANH')")
     Long sumQuantityByProductId(@Param("proId") Long proId);
 
-    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.optionId = :optionId")
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od WHERE od.option.optionId = :optionId AND upper(od.order.status) IN ('COMPLETED','HOÀN THÀNH','ĐÃ HOÀN THÀNH','DA HOAN THANH','HOAN THANH')")
     Long sumQuantityByOptionId(@Param("optionId") Long optionId);
 
     List<OrderDetail> findByOrderOrderId(Long orderId);

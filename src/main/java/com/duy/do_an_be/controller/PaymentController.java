@@ -18,8 +18,8 @@ public class PaymentController {
         String description = (String) request.get("description");
 
         // Format: https://img.vietqr.io/image/<BANK_ID>-<ACCOUNT_NO>-<TEMPLATE>.jpg?amount=<AMOUNT>&addInfo=<DESCRIPTION>
-        String bankId = "970422"; // MBBank
-        String accountNo = "0987654321"; // Mock demo account
+        String bankId = "970407"; // MBBank
+        String accountNo = "1029092004"; // Mock demo account
         String template = "qr_only";
         String qrCodeUrl = String.format("https://img.vietqr.io/image/%s-%s-%s.jpg?amount=%.0f&addInfo=%s",
                 bankId, accountNo, template, amount, description != null ? description.replace(" ", "%20") : "");
