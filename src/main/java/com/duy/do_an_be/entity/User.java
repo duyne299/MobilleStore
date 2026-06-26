@@ -30,6 +30,11 @@ public class User extends BaseEntity {
 
     private String avatar;
 
+    private String resetOtp;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date resetOtpExpiry;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

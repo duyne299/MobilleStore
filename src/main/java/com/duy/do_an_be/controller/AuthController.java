@@ -1,7 +1,9 @@
 package com.duy.do_an_be.controller;
 
+import com.duy.do_an_be.dto.request.ForgotPasswordRequest;
 import com.duy.do_an_be.dto.request.LoginRequest;
 import com.duy.do_an_be.dto.request.RegisterRequest;
+import com.duy.do_an_be.dto.request.ResetPasswordRequest;
 import com.duy.do_an_be.dto.response.AuthResponse;
 import com.duy.do_an_be.entity.User;
 import com.duy.do_an_be.service.AuthService;
@@ -30,6 +32,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        return ResponseEntity.ok(authService.forgotPassword(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return ResponseEntity.ok(authService.resetPassword(request));
     }
 
     @GetMapping("/profile")
