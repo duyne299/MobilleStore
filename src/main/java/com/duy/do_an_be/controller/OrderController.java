@@ -1,7 +1,9 @@
 package com.duy.do_an_be.controller;
 
 import com.duy.do_an_be.entity.Order;
+import com.duy.do_an_be.entity.User;
 import com.duy.do_an_be.service.OrderService;
+import com.duy.do_an_be.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> findAll(
@@ -28,6 +31,11 @@ public class OrderController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
+        User currentUser = userService.getCurrentUser();
+        if (currentUser.getRole() != User.Role.ADMIN && currentUser.getRole() != User.Role.STAFF) {
+            userId = currentUser.getUserId();
+        }
+
         Page<Order> orderPage = orderService.findAll(userId, status, orderType, dateFrom, dateTo, search, page, limit);
         Map<String, Object> response = new HashMap<>();
         response.put("orders", orderPage.getContent());
