@@ -1,5 +1,6 @@
 package com.duy.do_an_be.controller;
 
+import com.duy.do_an_be.dto.request.PostUpdateRequest;
 import com.duy.do_an_be.entity.Post;
 import com.duy.do_an_be.repository.PostRepository;
 import com.duy.do_an_be.service.FileService;
@@ -60,7 +61,7 @@ public class PostController {
     @PutMapping(value = "/{slug}", consumes = {"multipart/form-data"})
     public ResponseEntity<Post> update(
             @PathVariable String slug,
-            @ModelAttribute Post postDto,
+            @ModelAttribute PostUpdateRequest postDto,
             @RequestParam(value = "image", required = false) MultipartFile thumbnail,
             @RequestParam(value = "authorId", required = false) Long authorId
     ) {
@@ -68,6 +69,37 @@ public class PostController {
             postDto.setThumbnail(fileService.saveFile(thumbnail));
         }
         return ResponseEntity.ok(postService.update(slug, postDto, authorId));
+    }
+
+    @PutMapping(value = "/{slug}", consumes = {"application/json"})
+    public ResponseEntity<Post> updateJson(
+            @PathVariable String slug,
+            @RequestBody PostUpdateRequest postDto,
+            @RequestParam(value = "authorId", required = false) Long authorId
+    ) {
+        return ResponseEntity.ok(postService.update(slug, postDto, authorId));
+    }
+
+    @PutMapping(value = "/{id:\\d+}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Post> updateById(
+            @PathVariable Long id,
+            @ModelAttribute PostUpdateRequest postDto,
+            @RequestParam(value = "image", required = false) MultipartFile thumbnail,
+            @RequestParam(value = "authorId", required = false) Long authorId
+    ) {
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            postDto.setThumbnail(fileService.saveFile(thumbnail));
+        }
+        return ResponseEntity.ok(postService.updateById(id, postDto, authorId));
+    }
+
+    @PutMapping(value = "/{id:\\d+}", consumes = {"application/json"})
+    public ResponseEntity<Post> updateByIdJson(
+            @PathVariable Long id,
+            @RequestBody PostUpdateRequest postDto,
+            @RequestParam(value = "authorId", required = false) Long authorId
+    ) {
+        return ResponseEntity.ok(postService.updateById(id, postDto, authorId));
     }
 
     @DeleteMapping("/{id}")
